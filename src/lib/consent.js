@@ -46,9 +46,17 @@ const consentConfig = {
       cookies: [
         {
           name: "__utma",
-          description: "Google Ads cookie for fuck you up",
+          description:
+            "Google Ads cookie for fuck you up ds cookie for fuck you up ds cookie for fuck you up",
           party: "1st",
           domain: document.location.hostname,
+          expiration: "1 year",
+        },
+        {
+          name: "__utma",
+          description: "nice cookie",
+          party: "3rd",
+          domain: "google.com",
           expiration: "1 year",
         },
       ],
@@ -64,10 +72,6 @@ const consentConfig = {
     sentry: {
       name: "Sentry",
       description: "Sentry is a service that provides error reporting.",
-    },
-    ajajaj: {
-      name: "Ajajaj",
-      description: "Ajajaj is a service that provides error reporting.",
     },
   },
 };

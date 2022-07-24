@@ -6,7 +6,10 @@
   import setCookie from "../lib/writeCookie";
 
   function handleRejectAll() {
-    let firstHit = document.cookie.indexOf(window.yepConfig.cookieName) === -1 ? true : false;
+    let firstHit =
+      document.cookie.indexOf(window.yepConfig.cookieName) === -1
+        ? true
+        : false;
     let acceptAll = false;
     let consentTS = Date.now();
 
@@ -26,6 +29,7 @@
     };
 
     cookieValue = { ...cookieValue, ...services };
+    cookieValue = JSON.stringify(cookieValue);
 
     setCookie(
       window.yepConfig.cookieName,

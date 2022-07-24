@@ -11,8 +11,12 @@ const setCookie = (name, value, days) => {
 
   window.dataLayer = window.dataLayer || [];
 
+  console.log(value)
+
+  const setOrChangeCookie = JSON.parse(value).firstHit;
+
   window.dataLayer.push({
-    event: "setCookie",
+    event: setOrChangeCookie ? "setCookie" : "changeCookie",
     name: name,
     value: value,
   });

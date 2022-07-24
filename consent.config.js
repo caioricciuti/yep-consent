@@ -1,7 +1,7 @@
 yepConfig = {
   elementID: "yep-consent",
   groupByPurpose: true,
-  cookieName: "jose",
+  cookieName: "consent",
   cookieExpiresAfterDays: 365,
   cookieDomain: "",
   privacyPolicy: "/datenschutz",
