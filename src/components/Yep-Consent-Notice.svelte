@@ -1,5 +1,5 @@
 <script>
-  import { showConsentNotice } from "../store.js";
+  import { showConsentNotice, showRejectAllBtn } from "../store.js";
   import { fade } from "svelte/transition";
 
   export let consent;
@@ -24,7 +24,9 @@
       </p>
       <div class="yep-cookie-notice-actions">
         <MoreInfoButton MoreInfoText={consent.moreInfo} />
-        <RejectAllButton {servicesArray} RejectAllText={consent.rejectAll} />
+        {#if $showRejectAllBtn}
+          <RejectAllButton {servicesArray} RejectAllText={consent.rejectAll} />
+        {/if}
         <AcceptAllButton {servicesArray} AcceptAllText={consent.acceptAll} />
       </div>
     </div>
@@ -32,38 +34,44 @@
 {/if}
 
 <style>
-  * {
-    background-color: #f0f0f0;
-  }
-
-  .yep-cookie-notice-text {
-    padding: 1rem;
-    text-align: justify;
-  }
   .yep-cookie-notice {
+    background-color: #f0f0f0;
     z-index: 1;
     position: fixed;
     bottom: 0;
+    width: 100%;
+    align-items: center;
   }
+
   .yep-cookie-notice-content {
     display: flex;
+    align-items: center;
+  }
+  .yep-cookie-notice-text {
+    max-width: 900px;
+    padding: 40px;
+    text-align: justify;
+    font-size: 1rem;
   }
   .yep-cookie-notice-actions {
     display: flex;
-    grid-row: 2 / 3;
     margin: 1rem;
   }
 
-  @media (max-width: 920px) {
+  @media (max-width: 980px) {
     .yep-cookie-notice-text {
-      padding: 1rem;
+      padding: 20px;
       margin: 0;
     }
     .yep-cookie-notice-content {
       display: inline;
     }
     .yep-cookie-notice-actions {
-      justify-content: space-between;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+    }
+    .yep-cookie-notice-actions {
       margin: 0;
     }
   }

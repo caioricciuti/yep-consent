@@ -6,7 +6,10 @@
   import setCookie from "../lib/writeCookie";
 
   function handleAcceptAll() {
-    let firstHit = document.cookie.indexOf("consent=") === -1 ? true : false;
+    let firstHit =
+      document.cookie.indexOf(window.yepConfig.cookieName) === -1
+        ? true
+        : false;
     let acceptAll = true;
     let consentTS = Date.now();
 
@@ -59,5 +62,11 @@
     white-space: nowrap;
     text-align: center;
     margin: 1rem;
+  }
+  @media (max-width: 980px) {
+    .yep-accept-all-btn {
+      margin: 10px;
+      order: 1;
+    }
   }
 </style>

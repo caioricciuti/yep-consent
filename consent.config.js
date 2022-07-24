@@ -1,14 +1,13 @@
 yepConfig = {
   elementID: "yep-consent",
   groupByPurpose: true,
-  cookieName: "consent",
+  cookieName: "jose",
   cookieExpiresAfterDays: 365,
   cookieDomain: "",
   privacyPolicy: "/datenschutz",
   impressum: "/impressum",
   mustConsent: false,
-  acceptAll: true,
-  hideDeclineAll: true,
+  showRejectAll: true,
   hideLearnMore: false,
   services: [
     {

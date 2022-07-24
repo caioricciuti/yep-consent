@@ -6,7 +6,7 @@
   import setCookie from "../lib/writeCookie";
 
   function handleRejectAll() {
-    let firstHit = document.cookie.indexOf("consent=") === -1 ? true : false;
+    let firstHit = document.cookie.indexOf(window.yepConfig.cookieName) === -1 ? true : false;
     let acceptAll = false;
     let consentTS = Date.now();
 
@@ -27,8 +27,6 @@
 
     cookieValue = { ...cookieValue, ...services };
 
-    cookieValue = JSON.stringify(cookieValue);
-
     setCookie(
       window.yepConfig.cookieName,
       cookieValue,
@@ -44,13 +42,13 @@
   }
 </script>
 
-<button on:click={handleRejectAll} class="yep-accept-all-btn"
+<button on:click={handleRejectAll} class="yep-reject-all-btn"
   >{RejectAllText}</button
 >
 
 <style>
-  .yep-accept-all-btn {
-    background-color: #123456;
+  .yep-reject-all-btn {
+    background-color: #96b0cb;
     color: #fff;
     border: none;
     padding: 0.5rem 1rem;
@@ -62,5 +60,11 @@
     white-space: nowrap;
     text-align: center;
     margin: 1rem;
+  }
+  @media (max-width: 980px) {
+    .yep-reject-all-btn {
+      margin: 10px;
+      order: 2;
+    }
   }
 </style>

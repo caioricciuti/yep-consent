@@ -4,7 +4,7 @@ const consentConfig = {
   acceptAll: "Accept All",
   rejectAll: "Reject All",
   acceptSelected: "Accept Selected",
-  moreInfo: "More Info",
+  moreInfo: "Options",
   privacyPolicy: {
     label: "Privacy policy",
     url: window.yepConfig.privacyPolicy,

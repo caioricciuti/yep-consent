@@ -44,7 +44,6 @@
       : (accordOpen = purposeAccordion);
   }
 
-
   let getInfoFromService = null;
   function handleOpenCookieInfo(serviceName) {
     getInfoFromService = serviceName;
@@ -53,7 +52,6 @@
 </script>
 
 {#if $showConsentModal}
-
   {#if $showCookieInfo}
     <CookieInfoModal {consent} {getInfoFromService} />
   {/if}
@@ -142,39 +140,42 @@
 
 <style>
   .yep-consent-modal {
-    display: show;
+    display: flex;
+    flex-direction: column;
     position: fixed;
     z-index: 1;
-    left: 0;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
     background-color: rgb(0, 0, 0);
     background-color: rgba(0, 0, 0, 0.4);
+    align-items: center;
+    justify-content: center;
   }
   .yep-consent-modal-content {
+    display: flex;
+    flex-direction: column;
     position: relative;
     border-radius: 10px;
+    margin: 20px 20px;
     background-color: #fefefe;
-    margin: 15% auto;
     padding: 20px;
     border: 1px solid #888;
-    width: 90%;
     max-width: 700px;
+    overflow: scroll;
   }
   .close-yep-consent-modal {
     cursor: pointer;
     position: absolute;
-    right: 10px;
-    top: 10px;
+    right: 15px;
+    top: 15px;
     font-size: 30px;
     color: #000;
   }
   .yep-consent-modal-title {
     font-weight: bold;
     margin-bottom: 1rem;
-    display: inline;
   }
   .yep-hr {
     margin-top: 1rem;
@@ -182,6 +183,10 @@
     height: 1px;
     border: none;
     border-radius: 10px;
+  }
+  .yep-accordion-item-header {
+    display: flex;
+    align-items: center;
   }
   .yep-chevron-down {
     box-sizing: border-box;
@@ -233,16 +238,14 @@
   }
   .yep-accordion {
     margin-bottom: 1rem;
-    display: relative;
   }
+
   .yep-accordion-item {
+    width: 100%;
     margin-top: 1rem;
   }
-  .yep-accordion-item-header {
-    display: inline;
-  }
+
   .yep-purpouse-name-modal {
-    display: inline;
     font-size: 1.2em;
     font-weight: bold;
     margin-left: 10px;
@@ -253,8 +256,7 @@
   }
   .yep-chevron-modal {
     margin-left: 10px;
-    display: inline;
-    float: right;
+    float: right !important;
   }
   .yep-consent-cookie-info {
     font-size: 0.8em;
