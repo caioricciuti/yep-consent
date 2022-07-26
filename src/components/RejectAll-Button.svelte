@@ -1,8 +1,12 @@
 <script>
   //@ts-nocheck
-  import { showConsentNotice, showConsentModal } from "../store.js";
-  export let RejectAllText;
-  export let servicesArray;
+  import {
+    showConsentNotice,
+    showConsentModal,
+    servicesList,
+    siteLanguage,
+  } from "../store.js";
+  import consent from "../lib/consent.js";
   import setCookie from "../lib/writeCookie";
 
   function handleRejectAll() {
@@ -11,24 +15,25 @@
         ? true
         : false;
     let acceptAll = false;
+    let rejectAll = true;
     let consentTS = Date.now();
 
     //create object from servicesArray
-    let services = {};
-    servicesArray.forEach((service) => {
-      let isRequired = window.yepConfig.services.find(
-        (element) => element.name === service
-      ).required;
-      isRequired ? (services[service] = true) : (services[service] = false);
+    let servicesObject = {};
+    $servicesList.forEach((service) => {
+      service.required == true
+        ? (servicesObject[service.name] = true)
+        : (servicesObject[service.name] = false);
     });
 
     let cookieValue = {
       firstHit: firstHit,
       consentTS: consentTS,
       acceptAll: acceptAll,
+      rejectAll: rejectAll,
     };
 
-    cookieValue = { ...cookieValue, ...services };
+    cookieValue = { ...cookieValue, ...servicesObject };
     cookieValue = JSON.stringify(cookieValue);
 
     setCookie(
@@ -37,23 +42,20 @@
       window.yepConfig.cookieExpiry
     );
 
-    showConsentNotice.update(() => {
-      showConsentNotice.value = false;
-    });
-    showConsentModal.update(() => {
-      showConsentModal.value = false;
-    });
+    $showConsentNotice = false;
+    $showConsentModal = false;
   }
 </script>
 
 <button on:click={handleRejectAll} class="yep-reject-all-btn"
-  >{RejectAllText}</button
+  >{consent[$siteLanguage].rejectAll}</button
 >
 
 <style>
   .yep-reject-all-btn {
-    background-color: #96b0cb;
-    color: #fff;
+    background-color: transparent;
+    color: #717171;
+    text-decoration: underline;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;
@@ -69,6 +71,8 @@
     .yep-reject-all-btn {
       margin: 10px;
       order: 2;
+      max-width: 160px;
+      align-self: center;
     }
   }
 </style>

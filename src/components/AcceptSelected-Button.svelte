@@ -1,13 +1,22 @@
 <script>
-  export let AcceptSelectedText;
+  import { siteLanguage } from "../store";
+  export let serviceAndPurposeSelection;
+
+  import consent from "../lib/consent";
+
+  function handleAcceptSelected() {
+    console.log(serviceAndPurposeSelection);
+  }
 </script>
 
-<button class="yep-accept-all-btn">{AcceptSelectedText}</button>
+<button class="yep-accept-selected-btn" on:click={handleAcceptSelected}
+  >{consent[$siteLanguage].acceptSelected}</button
+>
 
 <style>
-  .yep-accept-all-btn {
-    background-color: #00bcd4;
-    color: #fff;
+  .yep-accept-selected-btn {
+    background-color: #a1a1a1;
+    color: #000;
     border: none;
     padding: 0.5rem 1rem;
     border-radius: 0.25rem;

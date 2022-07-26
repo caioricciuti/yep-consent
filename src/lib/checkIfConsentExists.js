@@ -12,7 +12,6 @@ if (!window.yepConfig) {
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(";").shift();
   }
-  //@ts-ignore
   cookieExistis = getCookie(yepConfig.cookieName);
 }
 

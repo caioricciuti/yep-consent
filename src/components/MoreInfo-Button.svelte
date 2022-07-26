@@ -1,20 +1,20 @@
 <script>
   //@ts-nocheck
-  import { showConsentNotice, showConsentModal } from "../store.js";
-  export let MoreInfoText;
+  import {
+    showConsentNotice,
+    showConsentModal,
+    siteLanguage,
+  } from "../store.js";
+  import consent from "../lib/consent.js";
 
   function handleShowConsentModal() {
-    showConsentNotice.update(() => {
-      return (showConsentNotice.value = false);
-    });
-    showConsentModal.update(() => {
-      return (showConsentNotice.value = true);
-    });
+    $showConsentNotice = false;
+    $showConsentModal = true;
   }
 </script>
 
 <button on:click={handleShowConsentModal} class="yep-more-info-btn"
-  >{MoreInfoText}</button
+  >{consent[$siteLanguage].moreInfo}</button
 >
 
 <style>

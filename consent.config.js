@@ -1,5 +1,4 @@
 yepConfig = {
-  elementID: "yep-consent",
   groupByPurpose: true,
   cookieName: "consent",
   cookieExpiresAfterDays: 365,
@@ -18,6 +17,7 @@ yepConfig = {
     {
       name: "googleAnalytics",
       purpose: "analytics",
+      required: true,
     },
     {
       name: "consentManager",
@@ -27,5 +27,6 @@ yepConfig = {
       name: "sentry",
       purpose: "functional",
     },
+
   ],
 };

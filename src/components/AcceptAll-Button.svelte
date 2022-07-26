@@ -1,8 +1,15 @@
 <script>
   //@ts-nocheck
-  import { showConsentModal, showConsentNotice } from "../store.js";
-  export let AcceptAllText;
-  export let servicesArray;
+  import {
+    showConsentModal,
+    showConsentNotice,
+    servicesList,
+    siteLanguage
+  } from "../store.js";
+  //import to get button text
+  import consent from "../lib/consent.js";
+
+  //import function to set the cookie
   import setCookie from "../lib/writeCookie";
 
   function handleAcceptAll() {
@@ -13,10 +20,9 @@
     let acceptAll = true;
     let consentTS = Date.now();
 
-    //create object from servicesArray
-    let services = {};
-    servicesArray.forEach((service) => {
-      services[service] = true;
+    let serviceObject = {};
+    $servicesList.forEach((service) => {
+      serviceObject[service.name] = true;
     });
 
     let cookieValue = {
@@ -25,7 +31,7 @@
       acceptAll: acceptAll,
     };
 
-    cookieValue = { ...cookieValue, ...services };
+    cookieValue = { ...cookieValue, ...serviceObject };
 
     cookieValue = JSON.stringify(cookieValue);
 
@@ -35,17 +41,15 @@
       window.yepConfig.cookieExpiry
     );
 
-    showConsentNotice.update(() => {
-      showConsentNotice.value = false;
-    });
-    showConsentModal.update(() => {
-      showConsentModal.value = false;
-    });
+      $showConsentNotice = false;
+
+      $showConsentModal = false;
+
   }
 </script>
 
 <button on:click={handleAcceptAll} class="yep-accept-all-btn"
-  >{AcceptAllText}</button
+  >{consent[$siteLanguage].acceptAll}</button
 >
 
 <style>
