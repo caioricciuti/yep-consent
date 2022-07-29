@@ -12,21 +12,29 @@ yepConfig = {
     {
       name: "googleAds",
       purpose: "advertising",
-      required: true,
+    },
+    {
+      name: "bingAds",
+      purpose: "advertising",
     },
     {
       name: "googleAnalytics",
       purpose: "analytics",
-      required: true,
     },
+
     {
       name: "consentManager",
       purpose: "functional",
+      required: true,
     },
     {
       name: "sentry",
       purpose: "functional",
+      required: true,
     },
-
+    {
+      name: "tagManager",
+      purpose: "functional",
+    },
   ],
 };

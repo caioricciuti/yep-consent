@@ -63,6 +63,25 @@ const consentConfig = {
           },
         ],
       },
+      bingAds: {
+        name: "Bing Ads",
+        description:
+          "Microsoft will know everything about you and fuck you up!",
+        cookies: [
+          {
+            name: "_bat",
+            description:
+              "Bing lalala cookie for fuck you up ds cookie for fuck you up ds cookie for fuck you up",
+            party: "3rd",
+            domain: ".bingads.com",
+            expiration: "1 year",
+          },
+        ],
+      },
+      tagManager: {
+        name: "Google Tag Manager",
+        description: "We insert services by google tag manager containeirs.",
+      },
       googleAnalytics: {
         name: "Google Analytics",
         description: "Google Analytics is a web analytics service.",

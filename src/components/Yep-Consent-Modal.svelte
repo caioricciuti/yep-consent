@@ -31,9 +31,9 @@
   let serviceAndPurposeSelection = [];
 
   //push required servcices to serviceAndPurposeSelection array
-  $servicesList.forEach((element) => {
-    if (element.required) {
-      serviceAndPurposeSelection.push(element.name);
+  $servicesList.forEach((service) => {
+    if (service.required) {
+      serviceAndPurposeSelection.push(service.name);
     }
   });
 
@@ -58,48 +58,58 @@
   //checks all boxes and vice versa
   const onload = () => {
     //check box as tree
-    $servicesList.forEach((element) => {
-      let parentCheckBox = document.getElementById(element.purpose);
-      let serviceCheckBox = document.getElementById(
-        element.name + "-" + element.purpose
+    $servicesList.forEach((service) => {
+      let parentCheckBox = document.getElementById(
+        service.purpose + "-checkBox"
       );
-      if (element.required) {
+      let serviceCheckBox = document.getElementById(
+        service.name + "-" + service.purpose
+      );
+      if (service.required) {
         serviceCheckBox.checked = true;
       }
-      serviceCheckBox.onchange = function () {
-        if (serviceCheckBox.checked) {
-          serviceAndPurposeSelection = [
-            ...serviceAndPurposeSelection,
-            element.name,
-          ];
-        } else {
-          serviceAndPurposeSelection = serviceAndPurposeSelection.filter(
-            (item) => item !== element.name
-          );
-        }
-      };
+
       parentCheckBox.onchange = function () {
-        $servicesList.forEach((element) => {
+        $servicesList.forEach((service) => {
           let serviceCheckBox = document.getElementById(
-            element.name + "-" + element.purpose
+            service.name + "-" + service.purpose
           );
-          if (parentCheckBox.id === element.purpose && !element.required) {
+          if (
+            parentCheckBox.id.replace("-checkBox", "") === service.purpose &&
+            !service.required
+          ) {
             if (parentCheckBox.checked) {
               serviceCheckBox.checked = true;
               serviceAndPurposeSelection = [
                 ...serviceAndPurposeSelection,
-                element.name,
+                service.name,
               ];
             } else {
-              if (!element.required) {
+              if (!service.required) {
                 serviceCheckBox.checked = false;
                 serviceAndPurposeSelection = serviceAndPurposeSelection.filter(
-                  (item) => item !== element.name
+                  (item) => item !== service.name
                 );
               }
             }
           }
         });
+      };
+
+      serviceCheckBox.onchange = function () {
+        if (serviceCheckBox.checked) {
+          serviceAndPurposeSelection = [
+            ...serviceAndPurposeSelection,
+            service.name,
+          ];
+          parentCheckBox.checked = true;
+        }
+        if (!serviceCheckBox.checked) {
+          serviceAndPurposeSelection = serviceAndPurposeSelection.filter(
+            (item) => item !== service.name
+          );
+          parentCheckBox.checked = false;
+        }
       };
     });
   };
@@ -112,7 +122,6 @@
 
   <div use:onload transition:fade class="yep-consent-modal-background">
     <div class="yep-consent-modal-content">
-      {serviceAndPurposeSelection}
       <span on:click={handleCloseModal} class="yep-consent-modal-close"
         >&times;</span
       >
@@ -123,15 +132,14 @@
         </p>
       </div>
       <div class="yep-consent-modal-header-body">
-        <p>
+        <p class="yep-consent-modal-header-text">
           {@html consent[$siteLanguage].consentModalText.replace(
             "{{legal}}",
             `<a style="color: inherit" href='${consent[$siteLanguage].privacyPolicy.url}'>${consent[$siteLanguage].privacyPolicy.label}</a>`
           )}
         </p>
       </div>
-      <hr />
-
+      <div class="yep-separator" />
       <div class="yep-consent-modal-body-services">
         {#each purposesNoDups as purpouseGroup}
           <div class="yep-consent-purpouse-group">
@@ -140,12 +148,12 @@
                 class="yep-consent-input-checkbox"
                 type="checkbox"
                 value={purpouseGroup}
-                id={purpouseGroup}
+                id={purpouseGroup + "-checkBox"}
               />
               <div class="yep-slider yep-round" />
               <label
                 class="yep-consent-modal-purpose-list-label"
-                for={purpouseGroup}
+                for={purpouseGroup + "-checkBox"}
                 >{consent[$siteLanguage].purposes[purpouseGroup]
                   ? consent[$siteLanguage].purposes[purpouseGroup].name
                   : "Other"}
@@ -185,19 +193,22 @@
               >
                 {#if service.purpose === purpouseGroup}
                   <div class="yep-consent-modal-service-list-item">
-                    <input
-                      class="yep-consent-input-checkbox"
-                      type="checkbox"
-                      disabled={service.required}
-                      value={service.name}
-                      id={service.name + "-" + service.purpose}
-                    />
-                    <label
-                      class="yep-consent-modal-service-list-label"
-                      for={service.name + "-" + service.purpose}
-                      >{consent[$siteLanguage].services[service.name]
-                        ? consent[$siteLanguage].services[service.name].name
-                        : service.name}
+                    <label class="yep-switch">
+                      <input
+                        class="yep-consent-input-checkbox"
+                        type="checkbox"
+                        disabled={service.required}
+                        value={service.name}
+                        id={service.name + "-" + service.purpose}
+                      />
+                      <div class="yep-slider yep-round" />
+                      <label
+                        class="yep-consent-modal-service-list-label"
+                        for={service.name + "-" + service.purpose}
+                        >{consent[$siteLanguage].services[service.name]
+                          ? consent[$siteLanguage].services[service.name].name
+                          : service.name}
+                      </label>
                     </label>
                     <span
                       class="yep-consent-modal-cookie-info-btn"
@@ -241,10 +252,10 @@
     position: absolute;
     top: 0;
     right: 0;
-    padding: 1rem;
+    padding: 8px;
     cursor: pointer;
     font-weight: bold;
-    font-size: 1.5rem;
+    font-size: 26px;
   }
   .yep-consent-modal-content {
     overflow: auto;
@@ -259,27 +270,27 @@
     background-color: #fff;
     max-height: 80vh;
     z-index: 2;
-    padding: 1rem;
-    border-radius: 0.5rem;
+    padding: 20px;
+    border-radius: 10px;
   }
   .yep-consent-modal-header-title {
-    font-size: 1.2rem;
+    font-size: 20px;
     font-weight: bold;
   }
   .yep-consent-modal-header-body {
-    margin: 1rem 0rem;
+    margin: 8px 0px;
     text-align: justify;
     width: 95%;
   }
 
   .yep-consent-modal-services-list {
-    margin: 1rem 0rem;
+    margin: 10px 0px;
   }
 
   .yep-consent-modal-purpose-list-label {
-    font-size: 1.2rem;
+    font-size: 22px;
     font-weight: bold;
-    margin-left: 42px
+    margin-left: 42px;
   }
 
   .yep-consent-chevron-up {
@@ -330,27 +341,28 @@
     top: 2px;
   }
   .yep-consent-purpouse-group {
-    margin: 1rem 0rem;
+    margin: 16px 0px;
     align-items: center;
   }
   .yep-consent-purpose-description {
     display: flex;
     flex-direction: column;
-    font-size: 0.8rem;
+    font-size: 14px;
     color: #666;
   }
   .yep-chev-span {
     color: rgb(32, 92, 121);
     float: right;
-    margin-right: 2em;
+    margin-right: 30px;
   }
   .yep-consent-modal-service-list-item {
-    margin-left: 2em;
+    margin-left: 26px;
   }
   .yep-consent-modal-service-list-label {
-    font-size: 1rem;
+    font-size: 18px;
     color: rgb(60, 60, 60);
     font-weight: bold;
+    margin-left: 44px;
   }
   .yep-consent-modal-cookie-info-btn {
     font-weight: bold;
@@ -370,7 +382,7 @@
     text-align: center;
     padding: 5px;
     border-radius: 6px;
-    font-size: 0.8rem;
+    font-size: 12px;
     /* Position the tooltip text - see examples below! */
     position: absolute;
     z-index: 10;
@@ -427,7 +439,14 @@
   }
 
   input:checked + .yep-slider {
-    background-color: #2196f3;
+    background-color: #4caf50;
+  }
+  input:disabled + .yep-slider {
+    background-color: #4caf4f86;
+    cursor: not-allowed;
+  }
+  input:indeterminate + .yep-slider {
+    background-color: #ffc107;
   }
   input:focus + .yep-slider {
     box-shadow: 0 0 1px #2196f3;
@@ -438,11 +457,24 @@
     transform: translateX(16px);
   }
 
+  input:indeterminate + .yep-slider:before {
+    -webkit-transform: translateX(10px);
+    -ms-transform: translateX(10px);
+    transform: translateX(10px);
+  }
+
   .yep-slider.yep-round {
     border-radius: 34px;
   }
 
   .yep-slider.yep-round::before {
     border-radius: 50%;
+  }
+  .yep-separator {
+    margin: 0;
+    border-top: 0.5px solid #c1c1c1;
+  }
+  .yep-consent-modal-header-text {
+    margin-bottom: 12px;
   }
 </style>

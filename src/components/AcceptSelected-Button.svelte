@@ -18,10 +18,10 @@
     background-color: #a1a1a1;
     color: #000;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    padding: 6px 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 12px;
     font-weight: bold;
     margin-top: 1rem;
     white-space: nowrap;

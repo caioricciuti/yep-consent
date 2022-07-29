@@ -4,7 +4,7 @@
     showConsentModal,
     showConsentNotice,
     servicesList,
-    siteLanguage
+    siteLanguage,
   } from "../store.js";
   //import to get button text
   import consent from "../lib/consent.js";
@@ -41,10 +41,9 @@
       window.yepConfig.cookieExpiry
     );
 
-      $showConsentNotice = false;
+    $showConsentNotice = false;
 
-      $showConsentModal = false;
-
+    $showConsentModal = false;
   }
 </script>
 
@@ -57,15 +56,15 @@
     background-color: #00bcd4;
     color: #fff;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    padding: 6px 12px;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 16px;
     font-weight: bold;
-    margin-top: 1rem;
+    margin-top: 12px;
     white-space: nowrap;
     text-align: center;
-    margin: 1rem;
+    margin: 12px;
   }
   @media (max-width: 980px) {
     .yep-accept-all-btn {

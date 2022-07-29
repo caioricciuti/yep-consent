@@ -20,8 +20,13 @@
       <p class="yep-cookie-details-title">
         {consent[$siteLanguage].services[getInfoFromService]
           ? consent[$siteLanguage].services[getInfoFromService].name
-          : getInfoFromService} cookie details.
+          : getInfoFromService}
       </p>
+      <div class="yep-cookie-details-description">
+        {consent[$siteLanguage].services[getInfoFromService]
+          ? consent[$siteLanguage].services[getInfoFromService].description
+          : getInfoFromService}
+      </div>
     </div>
     {#if consent[$siteLanguage].services[getInfoFromService]}
       {#if consent[$siteLanguage].services[getInfoFromService].cookies}
@@ -96,11 +101,8 @@
     width: 90%;
     max-width: 500px;
   }
-  .yep-cookie-info-modal-header {
-    display: flex;
-  }
   .yep-cookie-details-title {
-    font-size: 1.2rem;
+    font-size: 16px;
     font-weight: bold;
     margin-bottom: 20px;
   }
@@ -116,7 +118,7 @@
   }
   .yep-cookie-details-tr {
     width: 100%;
-    font-size: 0.8rem;
+    font-size: 14px;
   }
   .yep-cookie-details-td-exp {
     padding: 8px;
@@ -125,5 +127,9 @@
   }
   .yep-cookie-details-td-int {
     padding: 8px;
+  }
+  .yep-cookie-details-description {
+    font-size: 14px;
+    margin-bottom: 12px;
   }
 </style>

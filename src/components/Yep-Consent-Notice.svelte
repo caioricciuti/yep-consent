@@ -69,11 +69,11 @@
     max-width: 900px;
     padding: 40px;
     text-align: justify;
-    font-size: 1rem;
+    font-size: 16px;
   }
   .yep-cookie-notice-actions {
     display: flex;
-    margin: 1rem;
+    margin: 26px;
   }
 
   @media (max-width: 980px) {
