@@ -52,7 +52,7 @@
 <style>
   .yep-cookie-notice {
     display: flex;
-    background-color: #f0f0f0;
+    background-color: #fff;
     z-index: 1;
     position: fixed;
     bottom: 0;

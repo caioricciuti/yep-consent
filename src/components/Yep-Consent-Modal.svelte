@@ -7,11 +7,14 @@
     servicesList,
     purposesList,
     siteLanguage,
+    showCookieInfo,
   } from "../store.js";
   import consent from "../lib/consent.js";
-  import { fade, fly } from "svelte/transition";
+  import { fade } from "svelte/transition";
 
   import AcceptSelectedButton from "./AcceptSelected-Button.svelte";
+  import YepCookieDetail from "./Yep-Cookie-Info.svelte";
+  import { loop_guard } from "svelte/internal";
 
   function handleCloseModal() {
     $showConsentModal = false;
@@ -24,15 +27,17 @@
   let purposesNoDups = [...new Set($purposesList)];
 
   //get checked purposes/services
-  let group = 1;
+
   let serviceAndPurposeSelection = [];
 
+  //push required servcices to serviceAndPurposeSelection array
   $servicesList.forEach((element) => {
     if (element.required) {
       serviceAndPurposeSelection.push(element.name);
     }
   });
 
+  //show hide services under purposes
   let hideServiceList = null;
 
   function handleShowServiceList(purpose) {
@@ -42,11 +47,72 @@
       hideServiceList = purpose;
     }
   }
+
+  //send info for cookie detail modal
+  let getInfoFromService = null;
+  function handleGetInfoFromService(service) {
+    getInfoFromService = service;
+    $showCookieInfo = true;
+  }
+
+  //checks all boxes and vice versa
+  const onload = () => {
+    //check box as tree
+    $servicesList.forEach((element) => {
+      let parentCheckBox = document.getElementById(element.purpose);
+      let serviceCheckBox = document.getElementById(
+        element.name + "-" + element.purpose
+      );
+      if (element.required) {
+        serviceCheckBox.checked = true;
+      }
+      serviceCheckBox.onchange = function () {
+        if (serviceCheckBox.checked) {
+          serviceAndPurposeSelection = [
+            ...serviceAndPurposeSelection,
+            element.name,
+          ];
+        } else {
+          serviceAndPurposeSelection = serviceAndPurposeSelection.filter(
+            (item) => item !== element.name
+          );
+        }
+      };
+      parentCheckBox.onchange = function () {
+        $servicesList.forEach((element) => {
+          let serviceCheckBox = document.getElementById(
+            element.name + "-" + element.purpose
+          );
+          if (parentCheckBox.id === element.purpose && !element.required) {
+            if (parentCheckBox.checked) {
+              serviceCheckBox.checked = true;
+              serviceAndPurposeSelection = [
+                ...serviceAndPurposeSelection,
+                element.name,
+              ];
+            } else {
+              if (!element.required) {
+                serviceCheckBox.checked = false;
+                serviceAndPurposeSelection = serviceAndPurposeSelection.filter(
+                  (item) => item !== element.name
+                );
+              }
+            }
+          }
+        });
+      };
+    });
+  };
 </script>
 
 {#if $showConsentModal}
-  <div transition:fade class="yep-consent-modal-background">
+  {#if $showCookieInfo}
+    <YepCookieDetail {getInfoFromService} />
+  {/if}
+
+  <div use:onload transition:fade class="yep-consent-modal-background">
     <div class="yep-consent-modal-content">
+      {serviceAndPurposeSelection}
       <span on:click={handleCloseModal} class="yep-consent-modal-close"
         >&times;</span
       >
@@ -69,19 +135,21 @@
       <div class="yep-consent-modal-body-services">
         {#each purposesNoDups as purpouseGroup}
           <div class="yep-consent-purpouse-group">
-            <input
-              bind:group={serviceAndPurposeSelection}
-              type="checkbox"
-              indeterminate="true"
-              value={purpouseGroup}
-              id={consent[$siteLanguage].purposes[purpouseGroup].name}
-            />
-            <label
-              class="yep-consent-modal-purpose-list-label"
-              for={consent[$siteLanguage].purposes[purpouseGroup].name}
-              >{consent[$siteLanguage].purposes[purpouseGroup]
-                ? consent[$siteLanguage].purposes[purpouseGroup].name
-                : "Other"}
+            <label class="yep-switch">
+              <input
+                class="yep-consent-input-checkbox"
+                type="checkbox"
+                value={purpouseGroup}
+                id={purpouseGroup}
+              />
+              <div class="yep-slider yep-round" />
+              <label
+                class="yep-consent-modal-purpose-list-label"
+                for={purpouseGroup}
+                >{consent[$siteLanguage].purposes[purpouseGroup]
+                  ? consent[$siteLanguage].purposes[purpouseGroup].name
+                  : "Other"}
+              </label>
             </label>
 
             {#if hideServiceList !== purpouseGroup}
@@ -118,20 +186,31 @@
                 {#if service.purpose === purpouseGroup}
                   <div class="yep-consent-modal-service-list-item">
                     <input
-                      bind:group={serviceAndPurposeSelection}
-                      class="yep-consent-modal-service-list-checkbox"
+                      class="yep-consent-input-checkbox"
                       type="checkbox"
                       disabled={service.required}
                       value={service.name}
-                      id={service.name}
+                      id={service.name + "-" + service.purpose}
                     />
                     <label
                       class="yep-consent-modal-service-list-label"
-                      for={service.name}
+                      for={service.name + "-" + service.purpose}
                       >{consent[$siteLanguage].services[service.name]
                         ? consent[$siteLanguage].services[service.name].name
-                        : service.name}</label
-                    >
+                        : service.name}
+                    </label>
+                    <span
+                      class="yep-consent-modal-cookie-info-btn"
+                      on:click={() => {
+                        handleGetInfoFromService(service.name);
+                      }}
+                      >{@html "&#9432;"}
+                      <span class="yep-cookie-tooltip-text"
+                        >{consent[$siteLanguage].services[service.name]
+                          ? consent[$siteLanguage].services[service.name].name
+                          : service.name} Cookie info</span
+                      >
+                    </span>
                   </div>
                 {/if}
               </div>
@@ -200,7 +279,7 @@
   .yep-consent-modal-purpose-list-label {
     font-size: 1.2rem;
     font-weight: bold;
-    margin-left: 0.5rem;
+    margin-left: 42px
   }
 
   .yep-consent-chevron-up {
@@ -268,12 +347,102 @@
   .yep-consent-modal-service-list-item {
     margin-left: 2em;
   }
-  .yep-consent-modal-service-list-checkbox {
-    margin-right: 1em;
-  }
   .yep-consent-modal-service-list-label {
     font-size: 1rem;
     color: rgb(60, 60, 60);
     font-weight: bold;
+  }
+  .yep-consent-modal-cookie-info-btn {
+    font-weight: bold;
+    color: rgb(32, 92, 121);
+    cursor: pointer;
+    margin-left: 5px;
+    margin-top: 5px;
+    position: relative;
+    display: inline-block;
+  }
+
+  .yep-cookie-tooltip-text {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgb(32, 92, 121);
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    /* Position the tooltip text - see examples below! */
+    position: absolute;
+    z-index: 10;
+  }
+
+  .yep-consent-modal-cookie-info-btn:hover .yep-cookie-tooltip-text {
+    visibility: visible;
+  }
+
+  .yep-consent-modal-cookie-info-btn .yep-cookie-tooltip-text {
+    opacity: 0;
+    transition: opacity 1.5s;
+  }
+
+  .yep-consent-modal-cookie-info-btn:hover .yep-cookie-tooltip-text {
+    opacity: 1;
+  }
+
+  .yep-switch {
+    position: relative;
+    width: 60px;
+    height: 34px;
+  }
+
+  .yep-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .yep-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+    max-width: 40px;
+    max-height: 20px;
+  }
+  .yep-slider:before {
+    position: absolute;
+    content: "";
+    height: 13px;
+    width: 13px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
+  }
+
+  input:checked + .yep-slider {
+    background-color: #2196f3;
+  }
+  input:focus + .yep-slider {
+    box-shadow: 0 0 1px #2196f3;
+  }
+  input:checked + .yep-slider:before {
+    -webkit-transform: translateX(16px);
+    -ms-transform: translateX(16px);
+    transform: translateX(16px);
+  }
+
+  .yep-slider.yep-round {
+    border-radius: 34px;
+  }
+
+  .yep-slider.yep-round::before {
+    border-radius: 50%;
   }
 </style>

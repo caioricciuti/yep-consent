@@ -1,8 +1,8 @@
 <script>
   //@ts-nocheck
-  import { showCookieInfo } from "../store";
+  import { showCookieInfo, siteLanguage } from "../store";
   export let getInfoFromService;
-  export let consent;
+  import consent from "../lib/consent";
 
   function handleCloseCookieDetails() {
     showCookieInfo.update(() => {
@@ -18,14 +18,14 @@
     >
     <div class="yep-cookie-info-modal-header">
       <p class="yep-cookie-details-title">
-        {consent.services[getInfoFromService]
-          ? consent.services[getInfoFromService].name
+        {consent[$siteLanguage].services[getInfoFromService]
+          ? consent[$siteLanguage].services[getInfoFromService].name
           : getInfoFromService} cookie details.
       </p>
     </div>
-    {#if consent.services[getInfoFromService]}
-      {#if consent.services[getInfoFromService].cookies}
-        {#each consent.services[getInfoFromService].cookies as cookie}
+    {#if consent[$siteLanguage].services[getInfoFromService]}
+      {#if consent[$siteLanguage].services[getInfoFromService].cookies}
+        {#each consent[$siteLanguage].services[getInfoFromService].cookies as cookie}
           <div class="cookie-datails-card">
             <table class="cookie-detais-table">
               <tbody>
